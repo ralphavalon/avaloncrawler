@@ -4,8 +4,8 @@ from unittest import TestCase
 from crawling.crawler import Crawler
 from service.impl.epoca_cosmeticos import EpocaCosmeticos
 
-class CrawlingTest(TestCase):
-    def test_crawling(self):
+class CrawlerTest(TestCase):
+    def test_crawl(self):
         crawler = Crawler()
         crawled_list = crawler.crawl([
                             EpocaCosmeticos()
