@@ -15,3 +15,10 @@ class CrawlingTest(TestCase):
         self.assertEquals('name', product.name)
         self.assertEquals('title', product.title)
         self.assertEquals('url', product.url)
+
+    def test_get_product(self):
+        crawler = Crawler()
+        product = crawler.get_product(EpocaCosmeticos())
+        self.assertEquals('name', product.name)
+        self.assertEquals('title', product.title)
+        self.assertEquals('url', product.url)
