@@ -1,0 +1,8 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "editor.rulers": [80,100],
+    "python.pythonPath":"C:\\Users\\Ralph Avalon\\webscraping_env\\Scripts\\python",
+    "files.exclude": {
+        "**/*.pyc": true
+    }
+}
