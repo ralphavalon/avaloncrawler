@@ -13,7 +13,7 @@ class CrawlerTest(TestCase):
         
         crawler = Crawler()
         epocaCosmeticos = EpocaCosmeticos()
-        epocaCosmeticos.get_category_pages = self.get_category_pages
+        epocaCosmeticos.get_home_page = self.get_home_page
         epocaCosmeticos.get_product_pages = self.get_product_pages
         crawled_dict = crawler.crawl([
                             epocaCosmeticos
@@ -35,10 +35,10 @@ class CrawlerTest(TestCase):
         base = os.path.normpath(base + os.sep + os.pardir)
         return os.path.join(base, url)
 
-    def get_category_pages(self):
+    def get_home_page(self):
         base_path = os.path.abspath('.') + os.sep + 'tests'
         file_base_path = 'file:///' + base_path
-        return [os.path.join(file_base_path, 'home.html'), os.path.join(file_base_path, 'categoria_1.html')]
+        return os.path.join(file_base_path, 'home.html')
     
     def get_product_pages(self):
         return '.*produto.*.html$'

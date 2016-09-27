@@ -18,6 +18,10 @@ class Crawlable:
         pass
 
     @abstractmethod
+    def get_home_page(self):
+        pass
+
+    @abstractmethod
     def get_product_name(self):
         pass
 

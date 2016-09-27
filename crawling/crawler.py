@@ -35,27 +35,39 @@ class Crawler:
         return html_response
 
     def link_crawler(self, crawlable):
-        seed_url, link_regex = crawlable.get_category_pages(), crawlable.get_product_pages()
+        main_url, link_regex = crawlable.get_home_page(), crawlable.get_product_pages()
+        
+        parsed_html = html.fromstring(self.download(main_url))
+        category_page_list = parsed_html.xpath(crawlable.get_category_pages())
+        seed_url = [main_url]
+        for category_page in category_page_list:
+            seed_url.append(urlparse.urljoin(main_url, category_page))
+
         crawl_queue = seed_url
         seen = set(crawl_queue)
         is_product = False
         product_list = []
+
         while crawl_queue:
             url = crawl_queue.pop()
-            html_response = self.download(url)
-            if is_product:
-                if link not in seed_url:
-                    product_list.append(self.get_product(crawlable,html_response, link))
-                is_product = False
-            
-            for link in self.get_links(html_response):
-                if re.match(link_regex, link):
-                    link = urlparse.urljoin(seed_url[0], link)
-                    is_product = True
-                    
-                    if link not in seen:
-                        seen.add(link)
-                        crawl_queue.append(link)
+            try:
+                html_response = self.download(url)
+                if is_product:
+                    if link not in seed_url:
+                        product_list.append(self.get_product(crawlable,html_response, link))
+                    is_product = False
+                
+                for link in self.get_links(html_response):
+                    if re.match(link_regex, link):
+                        link = urlparse.urljoin(seed_url[0], link)
+                        is_product = True
+                        
+                        if link not in seen:
+                            seen.add(link)
+                            crawl_queue.append(link)
+            except Exception as e:
+                print e
+
         return product_list
 
     def get_links(self, html):
