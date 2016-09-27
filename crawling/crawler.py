@@ -1,6 +1,6 @@
 # coding: utf-8
 
-import re, urllib2, urlparse, os
+import re, urllib2, urlparse, os, time, random
 from lxml import html
 
 from model.product import Product
@@ -51,6 +51,7 @@ class Crawler:
         while crawl_queue:
             url = crawl_queue.pop()
             try:
+                time.sleep(random.randint(1,5)) #Making a little bit more difficult to be caught
                 html_response = self.download(url)
                 if is_product:
                     if link not in seed_url:
