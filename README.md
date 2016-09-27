@@ -1,5 +1,24 @@
+# Pré-Requisitos
+* Python 2.7+ (Recomendado 2.7.12)
+
+# Como Configurar
+* Basta executar o comando:
+pip install -r requirements.txt
+
+# Como executar
+* Basta executar o comando:
+python start_crawling.py
+
+# Testes
+* Para executar os testes, é necessário instalar requisitos de teste:
+pip install -r test-requirements.txt
+
+* E depois executar:
+python run_tests.py
+
 ## Agora você tem de capturar dados de outros 100 sites. Quais seriam suas estratégias para escalar a aplicação?
 R: Para cada site, só é preciso criar uma classe que estenda/implemente a classe Crawlable e adicionar a mesma na chamada do Crawling.
+As chamadas poderiam ser assíncronas e poderiam recebber como callback a geração do csv.
 
 ## Alguns sites carregam o preço através de JavaScript. Como faria para capturar esse valor.
 R: Se não for possível pegar a requisição através do AJAX que a página chama, pode ser utilizado o Selenium, de preferência com um browser head-less como o PhantomJS.

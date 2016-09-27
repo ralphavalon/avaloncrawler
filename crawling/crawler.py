@@ -1,6 +1,8 @@
 # coding: utf-8
 
 import re, urllib2, urlparse, os, time, random
+import sys, traceback
+
 from lxml import html
 
 from model.product import Product
@@ -67,8 +69,11 @@ class Crawler:
                             seen.add(link)
                             crawl_queue.append(link)
             except Exception as e:
-                print e
-
+                traceback.print_exc(file=sys.stdout)
+                is_product = False
+                if url not in seen:
+                    seen.add(link)
+                    
         return product_list
 
     def get_links(self, html):

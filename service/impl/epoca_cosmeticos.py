@@ -18,4 +18,4 @@ class EpocaCosmeticos(Crawlable):
         return 'http://www.epocacosmeticos.com.br/'
     
     def get_product_name(self):
-        return '//div[@class="productName"]/text()'
+        return '//div[contains(@class, "productName")]/text()'
