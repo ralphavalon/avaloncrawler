@@ -4,21 +4,13 @@ from unittest import TestCase
 from crawling.crawler import Crawler
 from service.impl.epoca_cosmeticos import EpocaCosmeticos
 
-class CrawlerTest(TestCase):
-    def test_crawl(self):
-        crawler = Crawler()
-        crawled_list = crawler.crawl([
-                            EpocaCosmeticos()
-                        ])
-        product = crawled_list[0]
-        self.assertEquals(1, len(crawled_list))
-        self.assertEquals('name', product.name)
-        self.assertEquals('title', product.title)
-        self.assertEquals('url', product.url)
+class CrawlerUnitTest(TestCase):
 
     def test_get_product(self):
         crawler = Crawler()
-        product = crawler.get_product(EpocaCosmeticos())
-        self.assertEquals('name', product.name)
-        self.assertEquals('title', product.title)
-        self.assertEquals('url', product.url)
+        html_response = '<div class="productName">Produto 1</div><title>Titulo do Produto 1</title>'
+        link = 'http://www.epocacosmeticos.com.br/product/p'
+        product = crawler.get_product(EpocaCosmeticos(), html_response, link)
+        self.assertEquals('Produto 1', product.name)
+        self.assertEquals('Titulo do Produto 1', product.title)
+        self.assertEquals(link, product.url)
