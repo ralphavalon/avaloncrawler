@@ -45,6 +45,7 @@ class Crawler:
         for category_page in category_page_list:
             seed_url.append(urlparse.urljoin(main_url, category_page))
 
+        seed_url = list(set(seed_url))
         crawl_queue = seed_url
         seen = set(crawl_queue)
         is_product = False
@@ -52,9 +53,12 @@ class Crawler:
 
         while crawl_queue:
             url = crawl_queue.pop()
+            
             try:
-                time.sleep(random.randint(1,5)) #Making a little bit more difficult to be caught
+                
+                #time.sleep(random.randint(1,5)) #Making a little bit more difficult to be caught
                 html_response = self.download(url)
+
                 if is_product:
                     if link not in seed_url:
                         product_list.append(self.get_product(crawlable,html_response, link))
@@ -62,7 +66,7 @@ class Crawler:
                 
                 for link in self.get_links(html_response):
                     if re.match(link_regex, link):
-                        link = urlparse.urljoin(seed_url[0], link)
+                        link = urlparse.urljoin(main_url, link)
                         is_product = True
                         
                         if link not in seen:
