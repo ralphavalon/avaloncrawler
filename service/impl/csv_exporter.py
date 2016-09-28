@@ -1,6 +1,7 @@
 import csv
 from ..exporter import Exporter
 from datetime import datetime
+import sys, traceback
 
 class CSVExporter(Exporter):
 
@@ -13,7 +14,10 @@ class CSVExporter(Exporter):
     def __write__(self, outputWriter, exportable_list):
         for exportable in exportable_list:
             exportable_attrs = exportable.get_exportable_attrs()
+#            try:
             outputWriter.writerow(self.__get_row__(exportable, exportable_attrs))
+#            except Exception as e:
+
             
     def __get_filename__(self, filename_prefix):
         today = datetime.strftime(datetime.now(), '%Y-%m-%d')

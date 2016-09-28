@@ -54,5 +54,5 @@ class Crawler:
                 if url not in all_visited:
                     all_visited.append(url)
                     
-                    
+        print(str(len(product_list)) + ' products found.')            
         return product_list
