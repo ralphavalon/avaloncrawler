@@ -1,85 +1,58 @@
 # coding: utf-8
 
-import re, urllib2, urlparse, os, time, random
+import os, time, random
 import sys, traceback
 
-from lxml import html
-
-from model.product import Product
+from model.page import Page
 
 class Crawler:
     
-    def get_product(self, crawlable, html_response, link):
-        parsed_html = html.fromstring(html_response)
-        return Product(
-                    name = parsed_html.xpath(crawlable.get_product_name())[0],
-                    title= parsed_html.xpath(crawlable.get_product_title())[0],
-                    url  = link,
-                )
-
-    def crawl(self, crawlable_list):
+    def crawl(self, crawlable_list, max_delay=None):
         product_dict = {}
         for crawlable in crawlable_list:
-            product_dict[crawlable.get_crawlable_name()] = self.link_crawler(crawlable) 
+            product_dict[crawlable.get_crawlable_name()] = self.link_crawler(crawlable, max_delay) 
         return product_dict
 
-    def download(self, url, num_retries=2):
-        print 'Downloading:', url
-        try:
-            html_response = urllib2.urlopen(url).read()
-        except urllib2.URLError as e:
-            print 'Download error:', e.reason
-            html_response = None
-            if num_retries > 0:
-                if hasattr(e, 'code') and 500 <= e.code < 600:
-                    # retry 5XX HTTP errors
-                    html_response = self.download(url, num_retries-1)
-        return html_response
+    def link_crawler(self, crawlable, max_delay):
+        main_url, product_url_regex = crawlable.get_home_page(), crawlable.get_product_pages()
 
-    def link_crawler(self, crawlable):
-        main_url, link_regex = crawlable.get_home_page(), crawlable.get_product_pages()
+        main_page = Page(crawlable, main_url)
+        main_crawling_pages = main_page.get_main_crawling_pages()
+        crawl_queue = main_crawling_pages[:]
+        current_main_page = 0
+        main_pages_length = len(main_crawling_pages)
         
-        parsed_html = html.fromstring(self.download(main_url))
-        category_page_list = parsed_html.xpath(crawlable.get_category_pages())
-        seed_url = [main_url]
-        for category_page in category_page_list:
-            seed_url.append(urlparse.urljoin(main_url, category_page))
-
-        seed_url = list(set(seed_url))
-        crawl_queue = seed_url
-        seen = set(crawl_queue)
-        is_product = False
-        product_list = []
+        all_visited, product_list = [], []
+        products_visited = []
 
         while crawl_queue:
             url = crawl_queue.pop()
             
             try:
-                
-                #time.sleep(random.randint(1,5)) #Making a little bit more difficult to be caught
-                html_response = self.download(url)
-
-                if is_product:
-                    if link not in seed_url:
-                        product_list.append(self.get_product(crawlable,html_response, link))
-                    is_product = False
-                
-                for link in self.get_links(html_response):
-                    if re.match(link_regex, link):
-                        link = urlparse.urljoin(main_url, link)
-                        is_product = True
-                        
-                        if link not in seen:
-                            seen.add(link)
+                if url not in all_visited:
+                    if url in main_crawling_pages:
+                        current_main_page += 1
+                        print('\n%d out of %d main pages\n' % (current_main_page, main_pages_length))
+                    
+                    if max_delay and max_delay > 0:
+                        time.sleep(random.randint(0,max_delay)) #Making a little bit more difficult to be caught
+                    
+                    page = Page(crawlable, url)
+                    all_visited.append(url)
+                    
+                    if page.is_product and page.url not in products_visited:
+                        product_list.append(page.get_product())
+                        products_visited.append(page.url)
+                    
+                    page_links = page.get_page_links()
+                    for link in page_links:
+                        if link not in all_visited:
                             crawl_queue.append(link)
+
             except Exception as e:
                 traceback.print_exc(file=sys.stdout)
-                is_product = False
-                if url not in seen:
-                    seen.add(link)
+                if url not in all_visited:
+                    all_visited.append(url)
+                    
                     
         return product_list
-
-    def get_links(self, html):
-        webpage_regex = re.compile('<a[^>]+href=["\'](.*?)["\']', re.IGNORECASE)
-        return webpage_regex.findall(html)

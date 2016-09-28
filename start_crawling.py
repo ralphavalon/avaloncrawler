@@ -7,7 +7,7 @@ from service.impl.csv_exporter import CSVExporter
 crawler = Crawler()
 crawled_dict = crawler.crawl([
                      EpocaCosmeticos()
-                ])
+                ], max_delay=5)
 
 exporter = CSVExporter()
 

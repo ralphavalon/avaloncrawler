@@ -7,6 +7,10 @@
 pip install -r requirements.txt
 ```
 
+* Caso julgue necessário: alterar o arquivo start_crawling.py para usar o max_delay,
+que é um valor máximo definido para um range de intervalo randômico, para tornar
+mais difícil de ser bloqueado.
+
 # Como executar
 * Basta executar o comando:
 ```
@@ -32,7 +36,7 @@ As chamadas poderiam ser assíncronas e poderiam receber como callback a geraç�
 R: Se não for possível pegar a requisição através do AJAX que a página chama, pode ser utilizado o Selenium, de preferência com um browser head-less como o PhantomJS.
 
 ## Alguns sites podem bloquear a captura por interpretar seus acessos como um ataque DDOS. Como lidaria com essa situação?
-R: Intervalos randômicos de espera.
+R: Intervalos randômicos de espera e/ou proxies.
 
 ## Um cliente liga reclamando que está fazendo muitos acessos ao seu site e aumentando seus custos com infra. Como resolveria esse problema?
 R: Poderia negociar um horário que não fosse custoso, ou poderia fazer o crawling por partes/períodos de tempo. 
