@@ -10,7 +10,6 @@ class CrawlerUnitTest(TestCase):
 
     def test_get_product(self):
         crawler = Crawler()
-        html_response = '<div class="productName">Produto 1</div><title>Titulo do Produto 1</title>'
         base_path = os.path.abspath('.') + os.sep + 'tests'
         file_base_path = 'file:///' + base_path
         link = os.path.join(file_base_path, 'produto_1.html')

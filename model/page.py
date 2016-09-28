@@ -38,7 +38,7 @@ class Page:
         return page_links_list
         
     def get_product(self):
-        parsed_html = html.fromstring(self.html_source_code)
+        parsed_html = html.fromstring(self.html_source_code.decode('utf8'))
         return Product(
                     name = parsed_html.xpath(self.crawlable.get_product_name())[0],
                     title= parsed_html.xpath(self.crawlable.get_product_title())[0],
