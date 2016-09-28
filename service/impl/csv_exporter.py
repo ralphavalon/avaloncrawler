@@ -1,3 +1,5 @@
+﻿# coding: utf-8
+
 import csv
 from ..exporter import Exporter
 from datetime import datetime
@@ -12,11 +14,13 @@ class CSVExporter(Exporter):
         return row
         
     def __write__(self, outputWriter, exportable_list):
+        print('Writing products to the csv...')
         for exportable in exportable_list:
             exportable_attrs = exportable.get_exportable_attrs()
-#            try:
-            outputWriter.writerow(self.__get_row__(exportable, exportable_attrs))
-#            except Exception as e:
+            try:
+                outputWriter.writerow(self.__get_row__(exportable, exportable_attrs))
+            except Exception as e:
+                traceback.print_exc(file=sys.stdout)
 
             
     def __get_filename__(self, filename_prefix):
@@ -25,9 +29,12 @@ class CSVExporter(Exporter):
 
     def export(self, filename_prefix, exportable_list):
         if(exportable_list):
-            outputFile = open(self.__get_filename__(filename_prefix), 'w')
+            filename = self.__get_filename__(filename_prefix)
+            outputFile = open(filename, 'w')
+            print('Creating %s' %(filename))
             outputWriter = csv.writer(outputFile)
             self.__write__(outputWriter, exportable_list)
             outputFile.close()
+            print('Done.')
         else:
             raise Exception('No results')

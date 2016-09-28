@@ -18,7 +18,8 @@ class Crawler:
 
         main_page = Page(crawlable, main_url)
         main_crawling_pages = main_page.get_main_crawling_pages()
-        crawl_queue = main_crawling_pages[:]
+        #crawl_queue = main_crawling_pages[:]
+        crawl_queue = ['http://www.epocacosmeticos.com.br/perfumes/de-200-a-299,99?map=c,priceFrom']
         current_main_page = 0
         main_pages_length = len(main_crawling_pages)
         
@@ -33,7 +34,9 @@ class Crawler:
                     if url in main_crawling_pages:
                         current_main_page += 1
                         print('\n%d out of %d main pages\n' % (current_main_page, main_pages_length))
-                    
+                    if current_main_page == 2:
+                        break
+
                     if max_delay and max_delay > 0:
                         time.sleep(random.randint(0,max_delay)) #Making a little bit more difficult to be caught
                     

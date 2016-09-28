@@ -1,4 +1,4 @@
-# coding: utf-8
+﻿# coding: utf-8
 
 import __builtin__, csv, io, codecs
 from mox import Mox
@@ -21,6 +21,12 @@ class CSVExporterTest(TestCase):
         product = Product(name='pname', title='ptitle', url='purl')
 
         self.assertEquals(['pname', 'ptitle', 'purl'], exporter.__get_row__(product, product.get_exportable_attrs()))
+
+    def test_get_row_with_non_ascii(self):
+        exporter = CSVExporter()
+        product = Product(name='pnámê', title='ptítleü', url='purl')
+
+        self.assertEquals(['pname', 'ptitleu', 'purl'], exporter.__get_row__(product, product.get_exportable_attrs()))
 
     def test_export_with_success(self):
         exporter = CSVExporter()
